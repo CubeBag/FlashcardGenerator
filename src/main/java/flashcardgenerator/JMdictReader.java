@@ -37,8 +37,6 @@ public class JMdictReader {
 	System.out.println("Root element :" + doc.getDocumentElement().getNodeName());
 	System.out.println("Number of children : " + rootChildNodes.getLength());
 
-	// Document shortenedKanji = dBuilder.newDocument();
-
 	JSONObject joyoKanji = new JSONObject();
 
 	for (int i = 0; i < rootChildNodes.getLength(); i++) {
@@ -69,11 +67,8 @@ public class JMdictReader {
 		    NodeList readingsMeanings = currentProperty.getChildNodes().item(1).getChildNodes();
 		    System.out.println(readingsMeanings.item(0).getNodeName());
 		    // item 1 is actually the second because the first is #text frcoal
-		    // System.out.println(" Inside Readingmeaning Loop : " + readings.getLength());
 		    for (int k = 0; k < readingsMeanings.getLength(); k++) {
 			if (readingsMeanings.item(k).getNodeName().equals("reading")) {
-			    // System.out.println(" Reading Found : " + readings.item(k).getTextContent() +
-			    // " ---- " + readings.item(k).getAttributes().item(0).getNodeValue());
 			    String readingType = readingsMeanings.item(k).getAttributes().item(0).getNodeValue();
 			    if (readingType.equals("ja_on")) {
 				onReadings.put(readingsMeanings.item(k).getTextContent());
@@ -83,17 +78,13 @@ public class JMdictReader {
 			} else if (readingsMeanings.item(k).getNodeName().equals("meaning")
 				&& !readingsMeanings.item(k).hasAttributes()) {
 			    meanings.put(readingsMeanings.item(k).getTextContent());
-			    // System.out.println(" Meaning found :: " +
-			    // readingsMeanings.item(k).getTextContent());
 			}
 
 		    }
 		    break;
 		case "misc":
-		    // System.out.println(currentProperty.getChildNodes().getLength());
 		    NodeList miscChildren = currentProperty.getChildNodes();
-//		    Node grade = currentProperty.getChildNodes().item(1);
-//		    System.out.println(misc0.getNodeName() + misc0.getTextContent());
+
 		    for (int k = 0; k < miscChildren.getLength(); k++) {
 			if (miscChildren.item(k).getNodeName().equals("grade")) {
 			    int grade = Integer.parseInt(miscChildren.item(k).getTextContent());
@@ -105,24 +96,7 @@ public class JMdictReader {
 
 			}
 		    }
-//		    System.out.println(currentProperty.getChildNodes().toString());
-//		    System.out.println(currentProperty.getChildNodes().item(1).getChildNodes().getLength());
-//		    NodeList meaningsNodeList = currentProperty.getChildNodes().item(2).getChildNodes();
-//
-//		    for (int k = 0; k < meaningsNodeList.getLength(); k++) {
-//
-//			if (meaningsNodeList.item(k).getNodeName().equals("meaning")
-//				&& !readings.item(k).hasAttributes()) {
-//			    meanings.put(meaningsNodeList.item(k).getTextContent());
-//			    System.out.println(" Meaning found :: " + meaningsNodeList.item(k).getTextContent());
-//			}
-//		    }
 
-//                        System.out.println("Attributes of reading: "
-//                                + currentProperty.getAttributes());
-////                        if (currentProperty.hasAttributes() && currentProperty.getAttributes().) {
-////                            if (currentProperty.getAttributes().)
-////                        }
 		    break;
 		}
 
