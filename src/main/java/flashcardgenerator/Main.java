@@ -57,20 +57,20 @@ public class Main {
 
         // https://stackoverflow.com/a/34299793 i steal ur code >:3
         ColumnText index = new ColumnText(writer.getDirectContent());
-        index.setSimpleColumn(17, 0, 90, 198);
-        index.setText(new Phrase("#1", hiragino));
+        index.setSimpleColumn(17, 0, 150, 198);
+        index.setText(new Phrase("#1210", hiragino));
         index.go();
 
         ColumnText category = new ColumnText(writer.getDirectContent());
         index.setAlignment(Element.ALIGN_RIGHT);
         index.setSimpleColumn(0, 0, 343, 198);
-        index.setText(new Phrase("7-8R", hiragino));
+        index.setText(new Phrase("N1", hiragino));
         index.go();
 
         ColumnText kanji = new ColumnText(writer.getDirectContent());
         index.setAlignment(Element.ALIGN_CENTER);
         index.setSimpleColumn(0, -500, 360, 66);
-        index.setText(new Phrase("日", kyokasho));
+        index.setText(new Phrase("益", kyokasho));
         index.go();
 
         document.close();
