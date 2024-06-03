@@ -7,6 +7,7 @@ import com.itextpdf.text.BaseColor;
 import com.itextpdf.text.Chunk;
 import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
+import com.itextpdf.text.Element;
 import com.itextpdf.text.Font;
 import com.itextpdf.text.FontFactory;
 import com.itextpdf.text.PageSize;
@@ -44,18 +45,27 @@ public class Main {
 
         Chunk chunk2 = new Chunk();
 
-        document.add(chunk);
+        //document.add(chunk);
 
         Font kyokasho = FontFactory.getFont(
                 "/Users/cubeb/Downloads/UDDigiKyokashoNP-R-02.ttf",
                 BaseFont.IDENTITY_H, BaseFont.EMBEDDED, 18f, Font.NORMAL,
                 BaseColor.BLACK);
+        Font hiragino = FontFactory.getFont(
+                "/Users/cubeb/Downloads/hiragino_real.otf", BaseFont.IDENTITY_H,
+                BaseFont.EMBEDDED, 24f, Font.NORMAL, BaseColor.BLACK);
 
         // https://stackoverflow.com/a/34299793 i steal ur code >:3
-        ColumnText ct = new ColumnText(writer.getDirectContent());
-        ct.setSimpleColumn(10, 0, 90, 208);
-        ct.setText(new Phrase("we ball", kyokasho));
-        ct.go();
+        ColumnText index = new ColumnText(writer.getDirectContent());
+        index.setSimpleColumn(18, 0, 90, 197);
+        index.setText(new Phrase("#1", hiragino));
+        index.go();
+
+        ColumnText category = new ColumnText(writer.getDirectContent());
+        index.setAlignment(Element.ALIGN_RIGHT);
+        index.setSimpleColumn(0, 0, 342, 197);
+        index.setText(new Phrase("7-8R", hiragino));
+        index.go();
 
         document.close();
 
