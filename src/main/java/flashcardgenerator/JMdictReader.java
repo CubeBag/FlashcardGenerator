@@ -21,7 +21,8 @@ public class JMdictReader {
 	// TODO Auto-generated constructor stub
     }
 
-    public static void main(String[] args) throws ParserConfigurationException, SAXException, IOException {
+    public static JSONObject generateJoyoKanjiInfoJson()
+	    throws ParserConfigurationException, SAXException, IOException {
 	// yeetus https://stackoverflow.com/a/17212654
 
 	File kanjidicXml = new File("/Users/cubeb/Downloads/kanjidic2.xml");
@@ -34,8 +35,9 @@ public class JMdictReader {
 	Element root = doc.getDocumentElement();
 	NodeList rootChildNodes = root.getChildNodes();
 
-	System.out.println("Root element :" + doc.getDocumentElement().getNodeName());
-	System.out.println("Number of children : " + rootChildNodes.getLength());
+	// System.out.println("Root element :" +
+	// doc.getDocumentElement().getNodeName());
+	// System.out.println("Number of children : " + rootChildNodes.getLength());
 
 	JSONObject joyoKanji = new JSONObject();
 
@@ -56,8 +58,9 @@ public class JMdictReader {
 	    for (int j = 0; j < kanjiNodeChildren.getLength(); j++) {
 		Node currentProperty = kanjiNodeChildren.item(j);
 
-		System.out.println("Node Name : " + currentProperty.getNodeName());
-		System.out.println("Node Text Content : " + currentProperty.getTextContent());
+		// System.out.println("Node Name : " + currentProperty.getNodeName());
+		// System.out.println("Node Text Content : " +
+		// currentProperty.getTextContent());
 
 		switch (currentProperty.getNodeName()) {
 		case "literal":
@@ -65,7 +68,7 @@ public class JMdictReader {
 		    break;
 		case "reading_meaning":
 		    NodeList readingsMeanings = currentProperty.getChildNodes().item(1).getChildNodes();
-		    System.out.println(readingsMeanings.item(0).getNodeName());
+		    // System.out.println(readingsMeanings.item(0).getNodeName());
 		    // item 1 is actually the second because the first is #text frcoal
 		    for (int k = 0; k < readingsMeanings.getLength(); k++) {
 			if (readingsMeanings.item(k).getNodeName().equals("reading")) {
@@ -117,7 +120,10 @@ public class JMdictReader {
 
 	// outside for i
 
-	System.out.println("Found " + joyoKanji.length() + " joyo kanji.");
+	// System.out.println("Found " + joyoKanji.length() + " joyo kanji.");
+	// should be 2136
+
+	return joyoKanji;
 
     }
 
