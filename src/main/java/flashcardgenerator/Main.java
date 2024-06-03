@@ -57,13 +57,13 @@ public class Main {
 
         // https://stackoverflow.com/a/34299793 i steal ur code >:3
         ColumnText index = new ColumnText(writer.getDirectContent());
-        index.setSimpleColumn(18, 0, 90, 197);
+        index.setSimpleColumn(17, 0, 90, 198);
         index.setText(new Phrase("#1", hiragino));
         index.go();
 
         ColumnText category = new ColumnText(writer.getDirectContent());
         index.setAlignment(Element.ALIGN_RIGHT);
-        index.setSimpleColumn(0, 0, 342, 197);
+        index.setSimpleColumn(0, 0, 343, 198);
         index.setText(new Phrase("7-8R", hiragino));
         index.go();
 
