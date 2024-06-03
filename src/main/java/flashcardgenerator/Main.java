@@ -49,7 +49,7 @@ public class Main {
 
         Font kyokasho = FontFactory.getFont(
                 "/Users/cubeb/Downloads/UDDigiKyokashoNP-R-02.ttf",
-                BaseFont.IDENTITY_H, BaseFont.EMBEDDED, 18f, Font.NORMAL,
+                BaseFont.IDENTITY_H, BaseFont.EMBEDDED, 150f, Font.NORMAL,
                 BaseColor.BLACK);
         Font hiragino = FontFactory.getFont(
                 "/Users/cubeb/Downloads/hiragino_real.otf", BaseFont.IDENTITY_H,
@@ -65,6 +65,12 @@ public class Main {
         index.setAlignment(Element.ALIGN_RIGHT);
         index.setSimpleColumn(0, 0, 343, 198);
         index.setText(new Phrase("7-8R", hiragino));
+        index.go();
+
+        ColumnText kanji = new ColumnText(writer.getDirectContent());
+        index.setAlignment(Element.ALIGN_CENTER);
+        index.setSimpleColumn(0, -500, 360, 66);
+        index.setText(new Phrase("日", kyokasho));
         index.go();
 
         document.close();
