@@ -54,7 +54,7 @@ public class Main {
         // https://stackoverflow.com/a/34299793 i steal ur code >:3
         ColumnText ct = new ColumnText(writer.getDirectContent());
         ct.setSimpleColumn(10, 0, 90, 208);
-        ct.setText(new Phrase("String", kyokasho));
+        ct.setText(new Phrase("we ball", kyokasho));
         ct.go();
 
         document.close();
