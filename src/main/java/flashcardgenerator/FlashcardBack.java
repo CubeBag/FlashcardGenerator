@@ -10,6 +10,7 @@ import org.json.JSONObject;
 import org.xml.sax.SAXException;
 
 import com.itextpdf.text.BaseColor;
+import com.itextpdf.text.Chunk;
 import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
 import com.itextpdf.text.Font;
@@ -19,6 +20,7 @@ import com.itextpdf.text.Phrase;
 import com.itextpdf.text.Rectangle;
 import com.itextpdf.text.pdf.BaseFont;
 import com.itextpdf.text.pdf.ColumnText;
+import com.itextpdf.text.pdf.DefaultSplitCharacter;
 import com.itextpdf.text.pdf.PdfGState;
 import com.itextpdf.text.pdf.PdfWriter;
 
@@ -31,8 +33,8 @@ public class FlashcardBack {
     public static void main(String[] args) throws DocumentException, ParserConfigurationException, SAXException, IOException {
 
 	boolean INVERT_PAGE_ORDER = true; // when true, count down instead of up
-	int INDEX_START = 0;
-	int INDEX_END = 2137;
+	int INDEX_START = 1;
+	int INDEX_END = 30;
 
 	System.out.println("The width measure of letter sheet (8.5 inches) is " + PageSize.LETTER.getWidth());
 	float marginSize = 0;
@@ -53,6 +55,7 @@ public class FlashcardBack {
 		Font.NORMAL, BaseColor.BLACK);
 
 	JSONObject kanjiInfo = JMdictReader.generateJoyoKanjiInfoJson();
+	JSONObject kanjiIndex = KanjiIndexer.getIndexedJoyoKanji();
 
 	// baeldung is my daddy
 
@@ -62,51 +65,80 @@ public class FlashcardBack {
 //	document.add(flashcardTemplate);
 	// this tepmlate to align everything lol
 
-	String kanji = "行"; // litmus test
+	// String kanji = "行"; // litmus test
 
-	ColumnText definition = new ColumnText(writer.getDirectContent());
+	int weirdCrap = 0;
 
-	definition.setSimpleColumn(20, 10, 340, 206);
-	// kanjiInfo.getJSONObject(kanji).getJSONArray("meanings").toString()
-	JSONArray meanings = kanjiInfo.getJSONObject(kanji).getJSONArray("meanings");
-	definition.setText(new Phrase(formatDefinitions(meanings) + "\n" + formatDefinitions(meanings), hiragino));
-	definition.setLeading(0f, 1.15f);
-	definition.go();
+	for (int k = INDEX_END; k >= INDEX_START; k--) {
 
-	ColumnText kun = new ColumnText(writer.getDirectContent());
-	kun.setSimpleColumn(15, 0, 170, 133);
-	kun.setText(new Phrase("訓　ああああああああ\nわんぴーすは\n実在する\nあいうえお\nかきくけこ\nさしすせそそそそそそそそそそ\nたちつてと", kyokasho));
-	kun.setLeading(0f, 1.135f);
-	kun.go();
+	    String kanji = kanjiIndex.getString("" + k);
 
-	// https://stackoverflow.com/a/11765424
-	writer.getDirectContent().saveState();
-	PdfGState state = new PdfGState();
-	state.setFillOpacity(0f);
-	writer.getDirectContent().setGState(state);
-	writer.getDirectContent().setRGBColorFill(0xFF, 0xFF, 0xFF);
-	writer.getDirectContent().setLineWidth(1);
-	writer.getDirectContent().rectangle(15, 112.5, 16, 16);
-	writer.getDirectContent().fillStroke();
-	writer.getDirectContent().restoreState();
+	    if (!kanjiInfo.has(kanji)) {
+		if (k == 1739) {
+		    kanji = "𠮟";
+		} else if (k == 1740) {
+		    kanji = "鶏";
+		}
+		System.out.println(k);
+		weirdCrap++;
+	    }
 
-	ColumnText on = new ColumnText(writer.getDirectContent());
-	on.setSimpleColumn(190, 0, 345, 133);
-	on.setText(new Phrase("音　アイウエオ\nカキクケコ\nサシスセソ\nタチツテト\nナニヌネノ\nハヒフヘホホホホホホホホホホホホホホホホホ", kyokasho));
-	on.setLeading(0f, 1.135f);
-	on.go();
+	    ColumnText definition = new ColumnText(writer.getDirectContent());
+	    definition.setSimpleColumn(20, 10, 340, 206);
+	    // kanjiInfo.getJSONObject(kanji).getJSONArray("meanings").toString()
+	    // System.out.println(kanji);
+	    JSONArray meanings = kanjiInfo.getJSONObject(kanji).getJSONArray("meanings");
+	    definition.setText(new Phrase(formatDefinitions(meanings), hiragino));
+	    definition.setLeading(0f, 1.15f);
+	    definition.go();
 
-	writer.getDirectContent().saveState();
-	state = new PdfGState();
-	state.setFillOpacity(0f);
-	writer.getDirectContent().setGState(state);
-	writer.getDirectContent().setRGBColorFill(0xFF, 0xFF, 0xFF);
-	writer.getDirectContent().setLineWidth(1);
-	writer.getDirectContent().rectangle(190, 112.5, 16, 16);
-	writer.getDirectContent().fillStroke();
-	writer.getDirectContent().restoreState();
+	    ColumnText kun = new ColumnText(writer.getDirectContent());
+	    JSONArray kunyomi = kanjiInfo.getJSONObject(kanji).getJSONArray("kunReadings");
+	    kun.setSimpleColumn(15, 0, 210, 133);
+	    Phrase p = new Phrase("訓" + formatKunOn(kunyomi), kyokasho); //
+	    for (Chunk c : p.getChunks()) {
+		c.setSplitCharacter(new DefaultSplitCharacter('　'));
+	    }
+	    kun.setText(p);
+	    kun.setLeading(0f, 1.135f);
+	    kun.go();
 
+	    // https://stackoverflow.com/a/11765424
+	    writer.getDirectContent().saveState();
+	    PdfGState state = new PdfGState();
+	    state.setFillOpacity(0f);
+	    writer.getDirectContent().setGState(state);
+	    writer.getDirectContent().setRGBColorFill(0xFF, 0xFF, 0xFF);
+	    writer.getDirectContent().setLineWidth(1);
+	    writer.getDirectContent().rectangle(15, 112.5, 16, 16);
+	    writer.getDirectContent().fillStroke();
+	    writer.getDirectContent().restoreState();
+
+	    ColumnText on = new ColumnText(writer.getDirectContent());
+	    JSONArray onyomi = kanjiInfo.getJSONObject(kanji).getJSONArray("onReadings");
+	    on.setSimpleColumn(210, 0, 345, 133);
+	    Phrase q = new Phrase("音" + formatKunOn(onyomi), kyokasho);
+	    for (Chunk c : q.getChunks()) {
+		c.setSplitCharacter(new DefaultSplitCharacter('　'));
+	    }
+	    on.setText(q);
+	    on.setLeading(0f, 1.135f);
+	    on.go();
+
+	    writer.getDirectContent().saveState();
+	    state = new PdfGState();
+	    state.setFillOpacity(0f);
+	    writer.getDirectContent().setGState(state);
+	    writer.getDirectContent().setRGBColorFill(0xFF, 0xFF, 0xFF);
+	    writer.getDirectContent().setLineWidth(1);
+	    writer.getDirectContent().rectangle(210, 112.5, 16, 16);
+	    writer.getDirectContent().fillStroke();
+	    writer.getDirectContent().restoreState();
+
+	    document.newPage();
+	}
 	document.close();
+	System.out.println(weirdCrap);
 
     }
 
@@ -116,6 +148,25 @@ public class FlashcardBack {
 	    ret.append(definitions.get(i));
 	    if (i != definitions.length() - 1) {
 		ret.append(";  ");
+	    }
+	}
+	return ret.toString();
+
+    }
+
+    public static String formatKunOn(JSONArray readings) {
+	StringBuilder ret = new StringBuilder();
+	for (int i = 0; i < readings.length(); i++) {
+	    String reading = readings.getString(i);
+	    // ret.append(readings.get(i));
+	    for (int j = 0; j < reading.length(); j++) {
+		ret.append(reading.charAt(j));
+		if (j != reading.length() - 1) {
+		    // ret.append("\u2060");
+		}
+	    }
+	    if (i != readings.length() - 1) {
+		ret.append("　");
 	    }
 	}
 	return ret.toString();

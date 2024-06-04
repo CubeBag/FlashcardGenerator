@@ -27,8 +27,8 @@ public class FlashcardFront {
 
     public static void main(String[] args) throws DocumentException, IOException {
 
-	int INDEX_START = 0;
-	int INDEX_END = 2137;
+	int INDEX_START = 1;
+	int INDEX_END = 30;
 
 	System.out.println("The width measure of letter sheet (8.5 inches) is " + PageSize.LETTER.getWidth());
 	float marginSize = 10;
@@ -55,8 +55,7 @@ public class FlashcardFront {
 	System.out.println("bottom margin = " + document.bottomMargin());
 	System.out.println("top margin = " + document.topMargin());
 
-	PdfWriter writer = PdfWriter.getInstance(document,
-		new FileOutputStream("Kanji " + INDEX_START + " to " + INDEX_END + " Front.pdf"));
+	PdfWriter writer = PdfWriter.getInstance(document, new FileOutputStream("Kanji " + INDEX_START + " to " + INDEX_END + " Front.pdf"));
 
 	document.open();
 	Font font = FontFactory.getFont(FontFactory.COURIER, 16, BaseColor.BLACK);
@@ -66,10 +65,10 @@ public class FlashcardFront {
 
 	// document.add(chunk);
 
-	Font kyokasho = FontFactory.getFont("/Users/cubeb/Downloads/UDDigiKyokashoNP-R-02.ttf", BaseFont.IDENTITY_H,
-		BaseFont.EMBEDDED, 150f, Font.NORMAL, BaseColor.BLACK);
-	Font hiragino = FontFactory.getFont("/Users/cubeb/Downloads/hiragino_real.otf", BaseFont.IDENTITY_H,
-		BaseFont.EMBEDDED, 24f, Font.NORMAL, BaseColor.BLACK);
+	Font kyokasho = FontFactory.getFont("/Users/cubeb/Downloads/UDDigiKyokashoNP-R-02.ttf", BaseFont.IDENTITY_H, BaseFont.EMBEDDED, 150f,
+		Font.NORMAL, BaseColor.BLACK);
+	Font hiragino = FontFactory.getFont("/Users/cubeb/Downloads/hiragino_real.otf", BaseFont.IDENTITY_H, BaseFont.EMBEDDED, 24f, Font.NORMAL,
+		BaseColor.BLACK);
 
 	JSONObject kanjiIndex = KanjiIndexer.getIndexedJoyoKanji();
 	JSONObject kanjiCategory = KanjiIndexer.getKanjiCategoryJson();
