@@ -2,7 +2,6 @@ package flashcardgenerator;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.net.URL;
 
 import javax.xml.parsers.ParserConfigurationException;
 
@@ -15,7 +14,6 @@ import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
 import com.itextpdf.text.Font;
 import com.itextpdf.text.FontFactory;
-import com.itextpdf.text.Jpeg;
 import com.itextpdf.text.PageSize;
 import com.itextpdf.text.Phrase;
 import com.itextpdf.text.Rectangle;
@@ -59,9 +57,9 @@ public class FlashcardBack {
 	// baeldung is my daddy
 
 	// comment this out when everything is aligned
-	Jpeg flashcardTemplate = new Jpeg(new URL("file:///Users/cubeb/kanji/flashcard_scan.jpg"));
-	flashcardTemplate.scaleToFit(new Rectangle(360f, 216f));
-	document.add(flashcardTemplate);
+//	Jpeg flashcardTemplate = new Jpeg(new URL("file:///Users/cubeb/kanji/flashcard_scan.jpg"));
+//	flashcardTemplate.scaleToFit(new Rectangle(360f, 216f));
+//	document.add(flashcardTemplate);
 	// this tepmlate to align everything lol
 
 	String kanji = "行"; // litmus test
