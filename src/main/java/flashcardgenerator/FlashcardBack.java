@@ -34,7 +34,7 @@ public class FlashcardBack {
 
 	boolean INVERT_PAGE_ORDER = true; // when true, count down instead of up
 	int INDEX_START = 1;
-	int INDEX_END = 30;
+	int INDEX_END = 100;
 
 	System.out.println("The width measure of letter sheet (8.5 inches) is " + PageSize.LETTER.getWidth());
 	float marginSize = 0;
@@ -94,8 +94,8 @@ public class FlashcardBack {
 
 	    ColumnText kun = new ColumnText(writer.getDirectContent());
 	    JSONArray kunyomi = kanjiInfo.getJSONObject(kanji).getJSONArray("kunReadings");
-	    kun.setSimpleColumn(15, 0, 210, 133);
-	    Phrase p = new Phrase("訓" + formatKunOn(kunyomi), kyokasho); //
+	    kun.setSimpleColumn(15, 10, 210, 133);
+	    Phrase p = new Phrase("訓 " + formatKunOn(kunyomi), kyokasho); //
 	    for (Chunk c : p.getChunks()) {
 		c.setSplitCharacter(new DefaultSplitCharacter('　'));
 	    }
@@ -116,8 +116,8 @@ public class FlashcardBack {
 
 	    ColumnText on = new ColumnText(writer.getDirectContent());
 	    JSONArray onyomi = kanjiInfo.getJSONObject(kanji).getJSONArray("onReadings");
-	    on.setSimpleColumn(210, 0, 345, 133);
-	    Phrase q = new Phrase("音" + formatKunOn(onyomi), kyokasho);
+	    on.setSimpleColumn(220, 10, 345, 133);
+	    Phrase q = new Phrase("音 " + formatKunOn(onyomi), kyokasho);
 	    for (Chunk c : q.getChunks()) {
 		c.setSplitCharacter(new DefaultSplitCharacter('　'));
 	    }
@@ -131,7 +131,7 @@ public class FlashcardBack {
 	    writer.getDirectContent().setGState(state);
 	    writer.getDirectContent().setRGBColorFill(0xFF, 0xFF, 0xFF);
 	    writer.getDirectContent().setLineWidth(1);
-	    writer.getDirectContent().rectangle(210, 112.5, 16, 16);
+	    writer.getDirectContent().rectangle(220, 112.5, 16, 16);
 	    writer.getDirectContent().fillStroke();
 	    writer.getDirectContent().restoreState();
 
