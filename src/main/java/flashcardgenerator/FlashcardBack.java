@@ -2,6 +2,7 @@ package flashcardgenerator;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.net.URL;
 
 import javax.xml.parsers.ParserConfigurationException;
 
@@ -14,11 +15,13 @@ import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
 import com.itextpdf.text.Font;
 import com.itextpdf.text.FontFactory;
+import com.itextpdf.text.Jpeg;
 import com.itextpdf.text.PageSize;
 import com.itextpdf.text.Phrase;
 import com.itextpdf.text.Rectangle;
 import com.itextpdf.text.pdf.BaseFont;
 import com.itextpdf.text.pdf.ColumnText;
+import com.itextpdf.text.pdf.PdfGState;
 import com.itextpdf.text.pdf.PdfWriter;
 
 public class FlashcardBack {
@@ -48,26 +51,62 @@ public class FlashcardBack {
 
 	Font hiragino = FontFactory.getFont("/Users/cubeb/Downloads/hiragino_real.otf", BaseFont.IDENTITY_H, BaseFont.EMBEDDED, 16f, Font.NORMAL,
 		BaseColor.BLACK);
+	Font kyokasho = FontFactory.getFont("/Users/cubeb/Downloads/UDDigiKyokashoNP-R-02.ttf", BaseFont.IDENTITY_H, BaseFont.EMBEDDED, 16f,
+		Font.NORMAL, BaseColor.BLACK);
 
 	JSONObject kanjiInfo = JMdictReader.generateJoyoKanjiInfoJson();
 
 	// baeldung is my daddy
 
 	// comment this out when everything is aligned
-//	Jpeg flashcardTemplate = new Jpeg(new URL("file:///Users/cubeb/kanji/flashcard_scan.jpg"));
-//	flashcardTemplate.scaleToFit(new Rectangle(360f, 216f));
-//	document.add(flashcardTemplate);
+	Jpeg flashcardTemplate = new Jpeg(new URL("file:///Users/cubeb/kanji/flashcard_scan.jpg"));
+	flashcardTemplate.scaleToFit(new Rectangle(360f, 216f));
+	document.add(flashcardTemplate);
 	// this tepmlate to align everything lol
 
 	String kanji = "行"; // litmus test
 
 	ColumnText definition = new ColumnText(writer.getDirectContent());
+
 	definition.setSimpleColumn(20, 10, 340, 206);
 	// kanjiInfo.getJSONObject(kanji).getJSONArray("meanings").toString()
 	JSONArray meanings = kanjiInfo.getJSONObject(kanji).getJSONArray("meanings");
-	definition.setText(new Phrase(formatDefinitions(kanjiInfo.getJSONObject(kanji).getJSONArray("meanings")), hiragino));
+	definition.setText(new Phrase(formatDefinitions(meanings) + "\n" + formatDefinitions(meanings), hiragino));
 	definition.setLeading(0f, 1.15f);
 	definition.go();
+
+	ColumnText kun = new ColumnText(writer.getDirectContent());
+	kun.setSimpleColumn(15, 0, 170, 133);
+	kun.setText(new Phrase("訓　ああああああああ\nわんぴーすは\n実在する\nあいうえお\nかきくけこ\nさしすせそそそそそそそそそそ\nたちつてと", kyokasho));
+	kun.setLeading(0f, 1.135f);
+	kun.go();
+
+	// https://stackoverflow.com/a/11765424
+	writer.getDirectContent().saveState();
+	PdfGState state = new PdfGState();
+	state.setFillOpacity(0f);
+	writer.getDirectContent().setGState(state);
+	writer.getDirectContent().setRGBColorFill(0xFF, 0xFF, 0xFF);
+	writer.getDirectContent().setLineWidth(1);
+	writer.getDirectContent().rectangle(15, 112.5, 16, 16);
+	writer.getDirectContent().fillStroke();
+	writer.getDirectContent().restoreState();
+
+	ColumnText on = new ColumnText(writer.getDirectContent());
+	on.setSimpleColumn(190, 0, 345, 133);
+	on.setText(new Phrase("音　アイウエオ\nカキクケコ\nサシスセソ\nタチツテト\nナニヌネノ\nハヒフヘホホホホホホホホホホホホホホホホホ", kyokasho));
+	on.setLeading(0f, 1.135f);
+	on.go();
+
+	writer.getDirectContent().saveState();
+	state = new PdfGState();
+	state.setFillOpacity(0f);
+	writer.getDirectContent().setGState(state);
+	writer.getDirectContent().setRGBColorFill(0xFF, 0xFF, 0xFF);
+	writer.getDirectContent().setLineWidth(1);
+	writer.getDirectContent().rectangle(190, 112.5, 16, 16);
+	writer.getDirectContent().fillStroke();
+	writer.getDirectContent().restoreState();
 
 	document.close();
 
