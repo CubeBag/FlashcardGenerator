@@ -118,6 +118,15 @@ public class JMdictReader {
 
 	}
 
+	JSONObject repeatPrevKanji = new JSONObject();
+	repeatPrevKanji.put("kunReadings", new JSONArray());
+	repeatPrevKanji.put("onReadings", new JSONArray());
+	JSONArray onemeaning = new JSONArray();
+	onemeaning.put("kanji repetition mark (repeat previous kanji)");
+	repeatPrevKanji.put("meanings", onemeaning);
+	joyoKanji.put("々", repeatPrevKanji);
+	// technically this is not a kanji but the book gives it an index
+
 	// outside for i
 
 	// System.out.println("Found " + joyoKanji.length() + " joyo kanji.");
