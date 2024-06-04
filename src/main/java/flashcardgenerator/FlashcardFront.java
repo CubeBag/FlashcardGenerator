@@ -26,6 +26,10 @@ public class FlashcardFront {
     }
 
     public static void main(String[] args) throws DocumentException, IOException {
+
+	int INDEX_START = 0;
+	int INDEX_END = 2137;
+
 	System.out.println("The width measure of letter sheet (8.5 inches) is " + PageSize.LETTER.getWidth());
 	float marginSize = 10;
 	Document document = new Document(new Rectangle(360f, 216f), marginSize, marginSize, marginSize, marginSize);
@@ -51,7 +55,8 @@ public class FlashcardFront {
 	System.out.println("bottom margin = " + document.bottomMargin());
 	System.out.println("top margin = " + document.topMargin());
 
-	PdfWriter writer = PdfWriter.getInstance(document, new FileOutputStream("iTextHelloWorld.pdf"));
+	PdfWriter writer = PdfWriter.getInstance(document,
+		new FileOutputStream("Kanji " + INDEX_START + " to " + INDEX_END + " Front.pdf"));
 
 	document.open();
 	Font font = FontFactory.getFont(FontFactory.COURIER, 16, BaseColor.BLACK);
@@ -70,7 +75,7 @@ public class FlashcardFront {
 	JSONObject kanjiCategory = KanjiIndexer.getKanjiCategoryJson();
 
 	// https://stackoverflow.com/a/34299793 i steal ur code >:3
-	for (int i = 1; i <= 2137; i++) {
+	for (int i = INDEX_START; i <= INDEX_END; i++) {
 	    ColumnText index = new ColumnText(writer.getDirectContent());
 	    index.setSimpleColumn(17, 0, 150, 198);
 	    index.setText(new Phrase("#" + i, hiragino));
