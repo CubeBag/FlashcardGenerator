@@ -27,29 +27,14 @@ public class FlashcardFront {
 
     public static void main(String[] args) throws DocumentException, IOException {
 
-	int INDEX_START = 1;
-	int INDEX_END = 100;
+	int INDEX_START = 101;
+	int INDEX_END = 200;
 
 	System.out.println("The width measure of letter sheet (8.5 inches) is " + PageSize.LETTER.getWidth());
 	float marginSize = 10;
 	Document document = new Document(new Rectangle(360f, 216f), marginSize, marginSize, marginSize, marginSize);
-	// 5
-	// *
-	// 612
-	// /
-	// 8.5
-	// =
-	// 360
-	// and
-	// 3
-	// *
-	// 612
-	// /
-	// 8.5
-	// =
-	// 216
-	// my gosh autoformat you fragile being what is wrong with you smh why would you
-	// do this
+	// 5 * 612 / 8.5 = 360, and 3 * 612 / 8.5 = 216
+
 	System.out.println("left margin = " + document.leftMargin());
 	System.out.println("right margin = " + document.rightMargin());
 	System.out.println("bottom margin = " + document.bottomMargin());

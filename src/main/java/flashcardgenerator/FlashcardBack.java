@@ -32,9 +32,16 @@ public class FlashcardBack {
 
     public static void main(String[] args) throws DocumentException, ParserConfigurationException, SAXException, IOException {
 
+	final int OFFSET = 4;
+	// apparently flashcard height is dependent on batch
+	// on the kind where the plastic has an overlap on the blank side when
+	// sealed, 0 works. but on the ones where the whole thing is shrink-
+	// wrapped, and there is a hole in the wrap, I'll try 3
+	// When OFFSET is a positive number, it shall move everything DOWN.
+
 	boolean INVERT_PAGE_ORDER = true; // when true, count down instead of up
-	int INDEX_START = 1;
-	int INDEX_END = 100;
+	int INDEX_START = 101;
+	int INDEX_END = 189;
 
 	System.out.println("The width measure of letter sheet (8.5 inches) is " + PageSize.LETTER.getWidth());
 	float marginSize = 0;
@@ -44,8 +51,13 @@ public class FlashcardBack {
 	System.out.println("right margin = " + document.rightMargin());
 	System.out.println("bottom margin = " + document.bottomMargin());
 	System.out.println("top margin = " + document.topMargin());
+	String filename = "Kanji " + INDEX_START + " to " + INDEX_END + " Back";
+	if (OFFSET != 0) {
+	    filename += " Offset" + OFFSET;
+	}
+	filename += ".pdf";
 
-	PdfWriter writer = PdfWriter.getInstance(document, new FileOutputStream("Kanji " + INDEX_START + " to " + INDEX_END + " Back.pdf"));
+	PdfWriter writer = PdfWriter.getInstance(document, new FileOutputStream(filename));
 
 	document.open();
 
@@ -84,7 +96,7 @@ public class FlashcardBack {
 	    }
 
 	    ColumnText definition = new ColumnText(writer.getDirectContent());
-	    definition.setSimpleColumn(20, 10, 340, 206);
+	    definition.setSimpleColumn(20, 10, 340, 206 - OFFSET);
 	    // kanjiInfo.getJSONObject(kanji).getJSONArray("meanings").toString()
 	    // System.out.println(kanji);
 	    JSONArray meanings = kanjiInfo.getJSONObject(kanji).getJSONArray("meanings");
@@ -94,7 +106,7 @@ public class FlashcardBack {
 
 	    ColumnText kun = new ColumnText(writer.getDirectContent());
 	    JSONArray kunyomi = kanjiInfo.getJSONObject(kanji).getJSONArray("kunReadings");
-	    kun.setSimpleColumn(15, 10, 210, 133);
+	    kun.setSimpleColumn(15, 10, 210, 133 - OFFSET);
 	    Phrase p = new Phrase("訓 " + formatKunOn(kunyomi), kyokasho); //
 	    for (Chunk c : p.getChunks()) {
 		c.setSplitCharacter(new DefaultSplitCharacter('　'));
@@ -110,13 +122,13 @@ public class FlashcardBack {
 	    writer.getDirectContent().setGState(state);
 	    writer.getDirectContent().setRGBColorFill(0xFF, 0xFF, 0xFF);
 	    writer.getDirectContent().setLineWidth(1);
-	    writer.getDirectContent().rectangle(15, 112.5, 16, 16);
+	    writer.getDirectContent().rectangle(15, 112.5 - OFFSET, 16, 16);
 	    writer.getDirectContent().fillStroke();
 	    writer.getDirectContent().restoreState();
 
 	    ColumnText on = new ColumnText(writer.getDirectContent());
 	    JSONArray onyomi = kanjiInfo.getJSONObject(kanji).getJSONArray("onReadings");
-	    on.setSimpleColumn(220, 10, 345, 133);
+	    on.setSimpleColumn(220, 10, 345, 133 - OFFSET);
 	    Phrase q = new Phrase("音 " + formatKunOn(onyomi), kyokasho);
 	    for (Chunk c : q.getChunks()) {
 		c.setSplitCharacter(new DefaultSplitCharacter('　'));
@@ -131,7 +143,7 @@ public class FlashcardBack {
 	    writer.getDirectContent().setGState(state);
 	    writer.getDirectContent().setRGBColorFill(0xFF, 0xFF, 0xFF);
 	    writer.getDirectContent().setLineWidth(1);
-	    writer.getDirectContent().rectangle(220, 112.5, 16, 16);
+	    writer.getDirectContent().rectangle(220, 112.5 - OFFSET, 16, 16);
 	    writer.getDirectContent().fillStroke();
 	    writer.getDirectContent().restoreState();
 
