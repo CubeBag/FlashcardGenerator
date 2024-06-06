@@ -32,16 +32,19 @@ public class FlashcardBack {
 
     public static void main(String[] args) throws DocumentException, ParserConfigurationException, SAXException, IOException {
 
-	final int OFFSET = 4;
+	final int OFFSET = 0;
 	// apparently flashcard height is dependent on batch
 	// on the kind where the plastic has an overlap on the blank side when
 	// sealed, 0 works. but on the ones where the whole thing is shrink-
 	// wrapped, and there is a hole in the wrap, I'll try 3
+	// nts: 3 ended up a little low, next time try 2
 	// When OFFSET is a positive number, it shall move everything DOWN.
+	// the new batch Staples cards have offset 0 so far
 
-	boolean INVERT_PAGE_ORDER = true; // when true, count down instead of up
-	int INDEX_START = 101;
-	int INDEX_END = 189;
+	// boolean INVERT_PAGE_ORDER = true; // when true, count down instead of up
+	// (unused rn, i might end up not implementing this)
+	int INDEX_START = 201;
+	int INDEX_END = 300;
 
 	System.out.println("The width measure of letter sheet (8.5 inches) is " + PageSize.LETTER.getWidth());
 	float marginSize = 0;
@@ -75,7 +78,7 @@ public class FlashcardBack {
 //	Jpeg flashcardTemplate = new Jpeg(new URL("file:///Users/cubeb/kanji/flashcard_scan.jpg"));
 //	flashcardTemplate.scaleToFit(new Rectangle(360f, 216f));
 //	document.add(flashcardTemplate);
-	// this tepmlate to align everything lol
+	// this tepmlate to align everything should NOT be used in the final print
 
 	// String kanji = "行"; // litmus test
 
@@ -85,6 +88,7 @@ public class FlashcardBack {
 
 	    String kanji = kanjiIndex.getString("" + k);
 
+	    // obtain a brain
 	    if (!kanjiInfo.has(kanji)) {
 		if (k == 1739) {
 		    kanji = "𠮟";
