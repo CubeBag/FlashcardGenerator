@@ -35,3 +35,7 @@ Step 3. Grind
 "I'm having a Maven problem / dependency problem"
 
 - me too
+
+"What cards do I buy to make this work?"
+
+- the cards I've settled on are the Staples 5-packs where all the lines are blue. These seem to be pretty good quality, and assuming there is not much variance between batches, you should be able to use offset 0. But if things are a little different, either play with offset in FlashcardFront until it looks nice, or scan a new picture of the blank index card and replace that as the template image and play with offset that way. Even if you do not buy this specific index card, any index card should work as long as you mess with offset to find the most visually-pleasing result :)
