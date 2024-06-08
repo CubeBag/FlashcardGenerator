@@ -26,8 +26,8 @@ public class FlashcardFront {
 
     public static void main(String[] args) throws DocumentException, IOException {
 
-	int INDEX_START = 201;
-	int INDEX_END = 300;
+	int INDEX_START = 401;
+	int INDEX_END = 450;
 
 	System.out.println("The width measure of letter sheet (8.5 inches) is " + PageSize.LETTER.getWidth());
 	float marginSize = 10;
