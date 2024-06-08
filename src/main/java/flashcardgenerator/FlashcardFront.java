@@ -26,8 +26,8 @@ public class FlashcardFront {
 
     public static void main(String[] args) throws DocumentException, IOException {
 
-	int INDEX_START = 401;
-	int INDEX_END = 450;
+	int INDEX_START = 1;
+	int INDEX_END = 2137;
 
 	System.out.println("The width measure of letter sheet (8.5 inches) is " + PageSize.LETTER.getWidth());
 	float marginSize = 10;
@@ -59,6 +59,9 @@ public class FlashcardFront {
 
 	// https://stackoverflow.com/a/34299793 i steal ur code >:3
 	for (int i = INDEX_START; i <= INDEX_END; i++) {
+
+	    // obtain a brain
+
 	    ColumnText index = new ColumnText(writer.getDirectContent());
 	    index.setSimpleColumn(17, 0, 150, 198);
 	    index.setText(new Phrase("#" + i, hiragino));
@@ -66,10 +69,25 @@ public class FlashcardFront {
 
 	    String kanji = kanjiIndex.getString("" + i);
 
+	    String categoryString;
+
+	    if (i == 1739) {
+		kanji = "𠮟";
+		System.out.println("workaround applied i=1739");
+		categoryString = "N1";
+	    } else if (i == 1740) {
+		kanji = "鶏";
+		System.out.println("workaround applied i=1740");
+		categoryString = "N1";
+	    } else {
+		categoryString = kanjiCategory.getString(kanji);
+	    }
+	    // todo: figure out why why why why WHY is this happening!?!?
+
 	    ColumnText category = new ColumnText(writer.getDirectContent());
 	    category.setAlignment(Element.ALIGN_RIGHT);
 	    category.setSimpleColumn(0, 0, 343, 198);
-	    category.setText(new Phrase(kanjiCategory.getString(kanji), hiragino));
+	    category.setText(new Phrase(categoryString, hiragino));
 	    category.go();
 
 	    ColumnText kanjiText = new ColumnText(writer.getDirectContent());

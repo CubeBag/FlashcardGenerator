@@ -43,8 +43,8 @@ public class FlashcardBack {
 
 	// boolean INVERT_PAGE_ORDER = true; // when true, count down instead of up
 	// (unused rn, i might end up not implementing this)
-	int INDEX_START = 401;
-	int INDEX_END = 450;
+	int INDEX_START = 1;
+	int INDEX_END = 2137;
 
 	System.out.println("The width measure of letter sheet (8.5 inches) is " + PageSize.LETTER.getWidth());
 	float marginSize = 0;

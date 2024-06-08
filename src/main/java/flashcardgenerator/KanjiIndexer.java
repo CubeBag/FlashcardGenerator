@@ -40,8 +40,16 @@ public class KanjiIndexer {
 	for (int i = 1; i <= allKanji.length(); i++) {
 	    String currentKanji = allKanji.substring(i - 1, i);
 
+	    if (i == 1739) {
+		currentKanji = "𠮟";
+		System.out.println("workaround applied i=1739");
+	    } else if (i == 1740) {
+		currentKanji = "鶏";
+		System.out.println("workaround applied i=1740");
+	    }
+
 	    indexedJoyoKanji.put("" + i, currentKanji);
-	    System.out.println(currentKanji + "=" + categoryDict.get(currentKanji));
+	    // System.out.println(currentKanji + "=" + categoryDict.get(currentKanji));
 
 	}
 
