@@ -26,8 +26,6 @@ public class AnkiDeckMaker {
 
 	// a
 
-	// test shit
-
 	JSONObject flippedIndex = KanjiIndexer.kanjiAsKeys();
 
 	JmdictReader a = new JmdictReader();
@@ -68,6 +66,7 @@ public class AnkiDeckMaker {
 		    String trolled = Character.toString(c);
 		    if (flippedIndex.has(trolled) && Integer.parseInt(flippedIndex.getString(trolled)) > end) {
 			continue wordloop;
+			// the 𠮟鶏 issue will rear its ugly head soon, idk how to deal with it yet
 		    }
 		}
 	    }
