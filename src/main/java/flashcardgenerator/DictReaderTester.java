@@ -16,7 +16,7 @@ public class DictReaderTester {
     public static void main(String[] args) throws ParserConfigurationException, SAXException, IOException {
 	// this method wishes it were a unit test! too bad! we can't all be happy
 
-	JSONObject joyoKanji = JMdictReader.generateJoyoKanjiInfoJson();
+	JSONObject joyoKanji = KanjidicReader.generateJoyoKanjiInfoJson();
 
 	String kanjiToGet = "版";
 

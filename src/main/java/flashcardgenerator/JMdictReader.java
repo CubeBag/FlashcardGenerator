@@ -2,30 +2,34 @@ package flashcardgenerator;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.regex.Pattern;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.xpath.XPathExpressionException;
 
-import org.json.JSONArray;
-import org.json.JSONObject;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
-public class JMdictReader {
+public class JmdictReader {
 
-    public JMdictReader() {
-	// TODO Auto-generated constructor stub
+    List<Node> commonWords;
+
+    public JmdictReader() {
+	this.commonWords = new ArrayList<>(210000);
+
     }
 
-    public static JSONObject generateJoyoKanjiInfoJson()
-	    throws ParserConfigurationException, SAXException, IOException {
+    public void readCommonWords() throws ParserConfigurationException, SAXException, IOException, XPathExpressionException {
 	// yeetus https://stackoverflow.com/a/17212654
 
-	File kanjidicXml = new File("/Users/cubeb/Downloads/kanjidic2.xml");
+	File kanjidicXml = new File("/Users/cubeb/Downloads/JMdict_e.xml");
 
 	DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
 	DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
@@ -39,101 +43,106 @@ public class JMdictReader {
 	// doc.getDocumentElement().getNodeName());
 	// System.out.println("Number of children : " + rootChildNodes.getLength());
 
-	JSONObject joyoKanji = new JSONObject();
+	int countEntries = 0;
+	int countCommonWords = 0;
 
-	for (int i = 0; i < rootChildNodes.getLength(); i++) {
+	wordLoop: for (int i = 0; i < rootChildNodes.getLength(); i++) {
 	    Node kanjiNode = rootChildNodes.item(i);
 	    if (kanjiNode.getNodeName().charAt(0) == '#') {
+		// System.out.println("fuck ma ballz");
 		continue;
 		// this is a fake ass node lmao
 	    }
 
-	    JSONArray kunReadings = new JSONArray();
-	    JSONArray onReadings = new JSONArray();
-	    JSONArray meanings = new JSONArray();
-	    String kanji = null;
-	    boolean foundGrade = false;
-
-	    NodeList kanjiNodeChildren = kanjiNode.getChildNodes();
-	    for (int j = 0; j < kanjiNodeChildren.getLength(); j++) {
-		Node currentProperty = kanjiNodeChildren.item(j);
-
-		// System.out.println("Node Name : " + currentProperty.getNodeName());
-		// System.out.println("Node Text Content : " +
-		// currentProperty.getTextContent());
-
-		switch (currentProperty.getNodeName()) {
-		case "literal":
-		    kanji = currentProperty.getTextContent();
-		    break;
-		case "reading_meaning":
-		    NodeList readingsMeanings = currentProperty.getChildNodes().item(1).getChildNodes();
-		    // System.out.println(readingsMeanings.item(0).getNodeName());
-		    // item 1 is actually the second because the first is #text frcoal
-		    for (int k = 0; k < readingsMeanings.getLength(); k++) {
-			if (readingsMeanings.item(k).getNodeName().equals("reading")) {
-			    String readingType = readingsMeanings.item(k).getAttributes().item(0).getNodeValue();
-			    if (readingType.equals("ja_on")) {
-				onReadings.put(readingsMeanings.item(k).getTextContent());
-			    } else if (readingType.equals("ja_kun")) {
-				kunReadings.put(readingsMeanings.item(k).getTextContent());
-			    }
-			} else if (readingsMeanings.item(k).getNodeName().equals("meaning")
-				&& !readingsMeanings.item(k).hasAttributes()) {
-			    meanings.put(readingsMeanings.item(k).getTextContent());
-			}
-
-		    }
-		    break;
-		case "misc":
-		    NodeList miscChildren = currentProperty.getChildNodes();
-
-		    for (int k = 0; k < miscChildren.getLength(); k++) {
-			if (miscChildren.item(k).getNodeName().equals("grade")) {
-			    int grade = Integer.parseInt(miscChildren.item(k).getTextContent());
-			    // System.out.println(" Grade : " + grade);
-			    if (grade <= 8) {
-				// this is a joyo kanji
-				foundGrade = true;
-			    }
-
-			}
-		    }
-
-		    break;
-		}
-
-	    }
-
-	    // outside for j
-
-	    if (foundGrade) {
-		JSONObject kanjiDetails = new JSONObject();
-		kanjiDetails.put("kunReadings", kunReadings);
-		kanjiDetails.put("onReadings", onReadings);
-		kanjiDetails.put("meanings", meanings);
-		joyoKanji.put(kanji, kanjiDetails);
-
+	    countEntries++;
+//	    Pattern pattern1 = Pattern.compile("r_ele");
+//	    Pattern pattern2 = Pattern.compile("re_pri");
+//
+//	    List<Node> firstSearch = JmdictReader.getChildrenNodesByName(kanjiNode, pattern1);
+//	    for (Node a : firstSearch) {
+//		if (JmdictReader.getChildNodeByName(a, pattern2) != null) {
+//		    this.commonWords.add(kanjiNode);
+//		    countCommonWords++;
+//		    continue wordLoop;
+//		}
+//	    }
+	    if (this.isCommon(kanjiNode)) {
+		this.commonWords.add(kanjiNode);
+		countCommonWords++;
+		continue wordLoop;
 	    }
 
 	}
 
-	JSONObject repeatPrevKanji = new JSONObject();
-	repeatPrevKanji.put("kunReadings", new JSONArray());
-	repeatPrevKanji.put("onReadings", new JSONArray());
-	JSONArray onemeaning = new JSONArray();
-	onemeaning.put("kanji repetition mark (repeat previous kanji)");
-	repeatPrevKanji.put("meanings", onemeaning);
-	joyoKanji.put("々", repeatPrevKanji);
-	// technically this is not a kanji but the book gives it an index
+	System.out.println("" + countEntries + " entries");
+	System.out.println("" + countCommonWords + " common words");
 
-	// outside for i
+    }
 
-	// System.out.println("Found " + joyoKanji.length() + " joyo kanji.");
-	// should be 2136
+    public List<Node> commonWordsIncludingKanji(Pattern kanji) {
+	List<Node> matchedWords = new ArrayList<>(50);
+	Pattern k_elePattern = Pattern.compile("k_ele");
+	Pattern kebPattern = Pattern.compile("^keb$");
 
-	return joyoKanji;
+	outerForLoop: for (Node word : this.commonWords) {
+	    List<Node> k_eleList = JmdictReader.getChildrenNodesByName(word, k_elePattern);
+	    for (Node k_eleNode : k_eleList) {
+		Node keb = JmdictReader.getChildNodeByName(k_eleNode, kebPattern);
 
+		if (keb != null && kanji.matcher(keb.getChildNodes().item(0).getNodeValue()).find()) {
+
+		    matchedWords.add(word);
+		    continue outerForLoop;
+		}
+	    }
+	}
+	return matchedWords;
+    }
+
+    public static Node getChildNodeByName(Node node, Pattern searchPattern) {
+	// return null if not found
+	if (node == null) {
+	    return null;
+	}
+	for (int i = 0; i < node.getChildNodes().getLength(); i++) {
+	    if (searchPattern.matcher(node.getChildNodes().item(i).getNodeName()).find()) {
+		return node.getChildNodes().item(i);
+	    }
+	}
+	return null;
+    }
+
+    public static List<Node> getChildrenNodesByName(Node node, Pattern searchPattern) {
+	// return null if not found
+	List<Node> ret = new ArrayList<>(5);
+	if (node == null) {
+	    return ret;
+	}
+
+	for (int i = 0; i < node.getChildNodes().getLength(); i++) {
+	    if (searchPattern.matcher(node.getChildNodes().item(i).getNodeName()).find()) {
+		ret.add(node.getChildNodes().item(i));
+	    }
+	}
+	return ret;
+    }
+
+    public boolean isCommon(Node node) {
+	Pattern pattern1 = Pattern.compile("k_ele|r_ele");
+	Pattern pattern2 = Pattern.compile("ke_pri|re_pri");
+
+	List<Node> firstSearch = JmdictReader.getChildrenNodesByName(node, pattern1);
+	for (Node a : firstSearch) {
+	    List<Node> secondSearch = JmdictReader.getChildrenNodesByName(a, pattern2);
+	    for (Node b : secondSearch) {
+		String commonClassifiction = b.getChildNodes().item(0).getNodeValue();
+		if (commonClassifiction.equals("news1") || commonClassifiction.equals("spec1") || commonClassifiction.equals("ichi1")) {
+
+		    return true;
+		}
+	    }
+	}
+	return false;
     }
 
 }

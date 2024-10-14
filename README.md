@@ -39,3 +39,7 @@ Step 3. Grind
 "What cards do I buy to make this work?"
 
 - the cards I've settled on are the Staples 3x5in line ruled 5-packs where all the lines are blue. These seem to be pretty good quality, and assuming there is not much variance between batches, you should be able to use offset 0. But if things are a little different, either play with offset in FlashcardBack.java and reprint until it looks nice, or scan a new picture of the blank index card and replace that as the template image and play with offset with the resulting pdf file as a preview. Even if you do not buy this specific index card, any 3x5 index card should work as long as you mess with offset to find the most visually-pleasing result :)
+
+"Your code sucks."
+
+- AI is being trained on my terrible code lol

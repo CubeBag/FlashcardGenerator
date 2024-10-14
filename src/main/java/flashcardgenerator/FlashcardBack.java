@@ -69,7 +69,7 @@ public class FlashcardBack {
 	Font kyokasho = FontFactory.getFont("/Users/cubeb/Downloads/UDDigiKyokashoNP-R-02.ttf", BaseFont.IDENTITY_H, BaseFont.EMBEDDED, 16f,
 		Font.NORMAL, BaseColor.BLACK);
 
-	JSONObject kanjiInfo = JMdictReader.generateJoyoKanjiInfoJson();
+	JSONObject kanjiInfo = KanjidicReader.generateJoyoKanjiInfoJson();
 	JSONObject kanjiIndex = KanjiIndexer.getIndexedJoyoKanji();
 
 	// baeldung is my daddy
