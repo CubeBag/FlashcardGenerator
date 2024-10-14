@@ -26,6 +26,10 @@ public class AnkiDeckMaker {
 
 	// a
 
+	// test shit
+
+	JSONObject flippedIndex = KanjiIndexer.kanjiAsKeys();
+
 	JmdictReader a = new JmdictReader();
 	a.readCommonWords();
 
@@ -45,7 +49,9 @@ public class AnkiDeckMaker {
 
 	BufferedWriter writer = new BufferedWriter(new FileWriter("Anki, Kanji Applications, " + start + "-" + end + ".txt"));
 
-	for (Node word : words) {
+	boolean useFutureKanji = false;
+
+	wordloop: for (Node word : words) {
 	    String kanji;
 	    String reading;
 	    StringBuilder definitions = new StringBuilder();
@@ -55,6 +61,15 @@ public class AnkiDeckMaker {
 		    .item(0).getNodeValue();
 	    if (!kanjiPattern.matcher(kanji).find()) {
 		continue;
+	    }
+
+	    if (!useFutureKanji) {
+		for (char c : kanji.toCharArray()) {
+		    String trolled = Character.toString(c);
+		    if (flippedIndex.has(trolled) && Integer.parseInt(flippedIndex.getString(trolled)) > end) {
+			continue wordloop;
+		    }
+		}
 	    }
 
 	    reading = JmdictReader.getChildNodeByName(JmdictReader.getChildrenNodesByName(word, r_elePattern).get(0), rebPattern).getChildNodes()

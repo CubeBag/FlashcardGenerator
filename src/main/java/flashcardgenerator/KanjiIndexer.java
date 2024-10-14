@@ -57,6 +57,16 @@ public class KanjiIndexer {
 
     }
 
+    public static JSONObject kanjiAsKeys() throws IOException {
+	JSONObject oldKanjiIndex = KanjiIndexer.getIndexedJoyoKanji();
+
+	JSONObject kanjiIndex = new JSONObject();
+	for (String index : oldKanjiIndex.keySet()) {
+	    kanjiIndex.put(oldKanjiIndex.getString(index), index);
+	}
+	return kanjiIndex;
+    }
+
     public static JSONObject getKanjiCategoryJson() throws IOException {
 	JSONObject categoryDict = new JSONObject();
 
