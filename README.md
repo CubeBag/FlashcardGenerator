@@ -4,6 +4,8 @@ you can run anything that has a main method! This is the world's first edible Fl
 
 on June 2nd, I received a vision. I was struck by the realization that I can run an index card through a printer. I worked on this code on June 3rd from 5am to 1am the next day. The code is now "done" and kanji flashcards can be easily generated and printed by anyone, but I'm still making tweaks for my own benefit. 
 
+Oct 14 2024 edits: optionally generate some Anki lists for common words that use these kanji. Pretty cool and swag
+
 ### Usage
 
 Step 1. Buy an obscene amount of 3x5 index cards
