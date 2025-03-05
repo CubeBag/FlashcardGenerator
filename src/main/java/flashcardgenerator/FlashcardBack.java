@@ -88,17 +88,6 @@ public class FlashcardBack {
 
 	    String kanji = kanjiIndex.getString("" + k);
 
-	    // obtain a brain
-//	    if (!kanjiInfo.has(kanji)) {
-//		if (k == 1739) {
-//		    kanji = "𠮟";
-//		} else if (k == 1740) {
-//		    kanji = "鶏";
-//		}
-//		System.out.println(k);
-//		weirdCrap++;
-//	    }
-
 	    ColumnText definition = new ColumnText(writer.getDirectContent());
 	    definition.setSimpleColumn(20, 10, 340, 206 - OFFSET);
 	    // kanjiInfo.getJSONObject(kanji).getJSONArray("meanings").toString()
