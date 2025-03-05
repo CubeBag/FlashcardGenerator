@@ -71,17 +71,18 @@ public class FlashcardFront {
 
 	    String categoryString;
 
-	    if (i == 1739) {
-		kanji = "𠮟";
-		System.out.println("workaround applied i=1739");
-		categoryString = "N1";
-	    } else if (i == 1740) {
-		kanji = "鶏";
-		System.out.println("workaround applied i=1740");
-		categoryString = "N1";
-	    } else {
-		categoryString = kanjiCategory.getString(kanji);
-	    }
+//	    if (i == 1739) {
+//		kanji = "𠮟";
+//		System.out.println("workaround applied i=1739");
+//		categoryString = "N1";
+//	    } else if (i == 1740) {
+//		kanji = "鶏";
+//		System.out.println("workaround applied i=1740");
+//		categoryString = "N1";
+//	    } else {
+//		categoryString = kanjiCategory.getString(kanji);
+//	    }
+	    categoryString = kanjiCategory.getString(kanji);
 	    // todo: figure out why why why why WHY is this happening!?!?
 
 	    ColumnText category = new ColumnText(writer.getDirectContent());
