@@ -46,6 +46,9 @@ public class FlashcardBack {
 	int INDEX_START = 1;
 	int INDEX_END = 2137;
 
+	final boolean bonusWords = true; // Write some example words below the kun/on readings
+	// (this helps me so I added it)
+
 	System.out.println("The width measure of letter sheet (8.5 inches) is " + PageSize.LETTER.getWidth());
 	float marginSize = 0;
 	Document document = new Document(new Rectangle(360f, 216f), marginSize, marginSize, marginSize, marginSize);
@@ -107,6 +110,7 @@ public class FlashcardBack {
 	    kun.setText(p);
 	    kun.setLeading(0f, 1.135f);
 	    kun.go();
+	    System.out.println(kanji + "　訓　Lines Written:" + kun.getLinesWritten());
 
 	    // https://stackoverflow.com/a/11765424
 	    writer.getDirectContent().saveState();
@@ -129,6 +133,12 @@ public class FlashcardBack {
 	    on.setText(q);
 	    on.setLeading(0f, 1.135f);
 	    on.go();
+	    System.out.println(kanji + "　音　Lines Written:" + on.getLinesWritten());
+
+	    if (bonusWords && on.getLinesWritten() <= 5 && kun.getLinesWritten() <= 5) {
+		System.out.println("Printing BONUS WORDS!");
+
+	    }
 
 	    writer.getDirectContent().saveState();
 	    state = new PdfGState();

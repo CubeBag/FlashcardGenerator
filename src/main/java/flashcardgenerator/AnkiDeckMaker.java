@@ -9,6 +9,7 @@ import java.util.regex.Pattern;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.xpath.XPathExpressionException;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 import org.w3c.dom.Node;
 import org.xml.sax.SAXException;
@@ -19,25 +20,12 @@ public class AnkiDeckMaker {
 	// TODO Auto-generated constructor stub
     }
 
-    public static void main(String[] args) throws ParserConfigurationException, SAXException, IOException, XPathExpressionException {
-	long startTime = System.currentTimeMillis();
-
-	// a
-
-	// a
-
-	JSONObject flippedIndex = KanjiIndexer.kanjiAsKeys();
-
+    public static JSONArray getVocabWordsFromPattern(Pattern kanjiPattern, boolean useFutureKanji)
+	    throws XPathExpressionException, ParserConfigurationException, SAXException, IOException {
 	JmdictReader a = new JmdictReader();
 	a.readCommonWords();
-
-	// Pattern kanjiPattern = Pattern.compile("力|身|界|重|品|町|計|建|医|花|走|歌|堂|鳥|夕|牛");
-	int start = 451;
-	int end = 460;
-	Pattern kanjiPattern = getPatternFromKanjiRange(start, end);
 	List<Node> words = a.commonWordsIncludingKanji(kanjiPattern);
 
-	System.out.println(words.size());
 	Pattern k_elePattern = Pattern.compile("k_ele");
 	Pattern kebPattern = Pattern.compile("^keb$");
 	Pattern r_elePattern = Pattern.compile("r_ele");
@@ -45,11 +33,23 @@ public class AnkiDeckMaker {
 	Pattern sensePattern = Pattern.compile("^sense$");
 	Pattern glossPattern = Pattern.compile("^gloss$");
 
-	BufferedWriter writer = new BufferedWriter(new FileWriter("Anki, Kanji Applications, " + start + "-" + end + ".txt"));
+	JSONObject flippedIndex = KanjiIndexer.kanjiAsKeys();
 
-	boolean useFutureKanji = false;
+	JSONArray words2 = new JSONArray();
+
+	int end = 0;
+	if (!useFutureKanji) {
+	    JSONObject regularIndex = KanjiIndexer.getIndexedJoyoKanji();
+	    for (int i = 1; i < regularIndex.length(); i++) {
+		String curKanji = regularIndex.getString("" + i);
+		if (kanjiPattern.matcher(curKanji).find()) {
+		    end = i;
+		}
+	    }
+	}
 
 	wordloop: for (Node word : words) {
+	    JSONObject word2 = new JSONObject();
 	    String kanji;
 	    String reading;
 	    StringBuilder definitions = new StringBuilder();
@@ -62,6 +62,7 @@ public class AnkiDeckMaker {
 	    }
 
 	    if (!useFutureKanji) {
+
 		for (char c : kanji.toCharArray()) {
 		    String trolled = Character.toString(c);
 		    if (flippedIndex.has(trolled) && Integer.parseInt(flippedIndex.getString(trolled)) > end) {
@@ -81,11 +82,44 @@ public class AnkiDeckMaker {
 	    definitions.deleteCharAt(definitions.length() - 1);
 	    definitions.deleteCharAt(definitions.length() - 1);
 
-	    writer.write(kanji + "<br>" + reading + "	" + definitions.toString());
-	    writer.newLine();
-	    System.out.println(kanji + "<br>" + reading + "	" + definitions.toString());
+	    word2.put("kanji", kanji);
+	    word2.put("reading", reading);
+	    word2.put("definition", definitions.toString());
+	    words2.put(word2);
 
 	}
+
+	return words2;
+    }
+
+    public static void main(String[] args) throws ParserConfigurationException, SAXException, IOException, XPathExpressionException {
+	long startTime = System.currentTimeMillis();
+
+	// a
+
+	// a
+
+	// Pattern kanjiPattern = Pattern.compile("力|身|界|重|品|町|計|建|医|花|走|歌|堂|鳥|夕|牛");
+	int start = 451;
+	int end = 460;
+
+	Pattern kanjiPattern = getPatternFromKanjiRange(start, end);
+	boolean useFutureKanji = false;
+
+	JSONArray vocabWords = getVocabWordsFromPattern(kanjiPattern, useFutureKanji);
+
+	System.out.println(vocabWords.length());
+
+	BufferedWriter writer = new BufferedWriter(new FileWriter("Anki, Kanji Applications, " + start + "-" + end + ".txt"));
+
+	for (int i = 0; i < vocabWords.length(); i++) {
+	    JSONObject k = vocabWords.getJSONObject(i);
+
+	    writer.write(k.getString("kanji") + "<br>" + k.getString("reading") + "	" + k.getString("definition"));
+	    writer.newLine();
+	    System.out.println(k.getString("kanji") + "<br>" + k.getString("reading") + "	" + k.getString("definition"));
+	}
+
 	writer.close();
 	// a
 
