@@ -78,10 +78,10 @@ public class FlashcardBack {
 		BaseColor.BLACK);
 	Font kyokasho = FontFactory.getFont("/Users/cubeb/Downloads/UDDigiKyokashoNP-R-02.ttf", BaseFont.IDENTITY_H, BaseFont.EMBEDDED, 16f,
 		Font.NORMAL, BaseColor.BLACK);
-	if (bonusWords) {
-	    kyokasho = FontFactory.getFont("/Users/cubeb/Downloads/Meiryo_UI.ttf", BaseFont.IDENTITY_H, BaseFont.EMBEDDED, 16f, Font.NORMAL,
-		    BaseColor.BLACK); // actually meiryoui
-	}
+//	if (bonusWords) {
+//	    kyokasho = FontFactory.getFont("/Users/cubeb/Downloads/Meiryo_UI.ttf", BaseFont.IDENTITY_H, BaseFont.EMBEDDED, 16f, Font.NORMAL,
+//		    BaseColor.BLACK); // actually meiryoui
+//	}
 
 	Font meiryoui = FontFactory.getFont("/Users/cubeb/Downloads/Meiryo_UI.ttf", BaseFont.IDENTITY_H, BaseFont.EMBEDDED, 16f, Font.NORMAL,
 		BaseColor.BLACK);
