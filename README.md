@@ -6,6 +6,8 @@ on June 2nd, I received a vision. I was struck by the realization that I can run
 
 Oct 14 2024 edits: optionally generate some Anki lists for common words that use these kanji. Pretty cool and swag
 
+Mar 5 2025 edits: Trying to put some common words on the back side of each card however much fits
+
 ### Usage
 
 Step 1. Buy an obscene amount of 3x5 index cards
@@ -44,4 +46,4 @@ Step 3. Grind
 
 "Your code sucks."
 
-- AI is being trained on my terrible code lol
+- AI is being trained on my terrible code lol sucks for them

@@ -2,8 +2,10 @@ package flashcardgenerator;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
 
 import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.xpath.XPathExpressionException;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -30,7 +32,8 @@ public class FlashcardBack {
 	// TODO Auto-generated constructor stub
     }
 
-    public static void main(String[] args) throws DocumentException, ParserConfigurationException, SAXException, IOException {
+    public static void main(String[] args)
+	    throws DocumentException, ParserConfigurationException, SAXException, IOException, XPathExpressionException {
 
 	final int OFFSET = 0;
 	// apparently flashcard height is dependent on batch
@@ -61,7 +64,11 @@ public class FlashcardBack {
 	if (OFFSET != 0) {
 	    filename += " Offset" + OFFSET;
 	}
+	if (bonusWords) {
+	    filename += " Bonus";
+	}
 	filename += ".pdf";
+	filename = filename.replace(" ", ".");
 
 	PdfWriter writer = PdfWriter.getInstance(document, new FileOutputStream(filename));
 
@@ -71,6 +78,13 @@ public class FlashcardBack {
 		BaseColor.BLACK);
 	Font kyokasho = FontFactory.getFont("/Users/cubeb/Downloads/UDDigiKyokashoNP-R-02.ttf", BaseFont.IDENTITY_H, BaseFont.EMBEDDED, 16f,
 		Font.NORMAL, BaseColor.BLACK);
+	if (bonusWords) {
+	    kyokasho = FontFactory.getFont("/Users/cubeb/Downloads/Meiryo_UI.ttf", BaseFont.IDENTITY_H, BaseFont.EMBEDDED, 16f, Font.NORMAL,
+		    BaseColor.BLACK); // actually meiryoui
+	}
+
+	Font meiryoui = FontFactory.getFont("/Users/cubeb/Downloads/Meiryo_UI.ttf", BaseFont.IDENTITY_H, BaseFont.EMBEDDED, 16f, Font.NORMAL,
+		BaseColor.BLACK);
 
 	JSONObject kanjiInfo = KanjidicReader.generateJoyoKanjiInfoJson();
 	JSONObject kanjiIndex = KanjiIndexer.getIndexedJoyoKanji();
@@ -86,6 +100,9 @@ public class FlashcardBack {
 	// String kanji = "行"; // litmus test
 
 	int weirdCrap = 0;
+
+	DictionaryIndexer dict = new DictionaryIndexer();
+	dict.init();
 
 	for (int k = INDEX_END; k >= INDEX_START; k--) {
 
@@ -110,7 +127,7 @@ public class FlashcardBack {
 	    kun.setText(p);
 	    kun.setLeading(0f, 1.135f);
 	    kun.go();
-	    System.out.println(kanji + "　訓　Lines Written:" + kun.getLinesWritten());
+	    // System.out.println(kanji + " 訓 Lines Written:" + kun.getLinesWritten());
 
 	    // https://stackoverflow.com/a/11765424
 	    writer.getDirectContent().saveState();
@@ -133,10 +150,60 @@ public class FlashcardBack {
 	    on.setText(q);
 	    on.setLeading(0f, 1.135f);
 	    on.go();
-	    System.out.println(kanji + "　音　Lines Written:" + on.getLinesWritten());
+	    // System.out.println(kanji + " 音 Lines Written:" + on.getLinesWritten());
 
-	    if (bonusWords && on.getLinesWritten() <= 5 && kun.getLinesWritten() <= 5) {
-		System.out.println("Printing BONUS WORDS!");
+	    if (bonusWords) {
+
+		int startLine = 7 - Math.min(7 - on.getLinesWritten(), 7 - kun.getLinesWritten()) + 1;
+		int numVacantLines = Math.max(Math.min(7 - on.getLinesWritten(), 7 - kun.getLinesWritten()), 0);
+
+		ArrayList<JSONObject> bonusWordsArrayList = dict.getWordsForKanjiByFrequency(kanji);
+
+		// System.out.println("Printing " + numVacantLines + " BONUS WORDS!");
+
+		ColumnText bonus = new ColumnText(writer.getDirectContent());
+
+		// bonus.setSimpleColumn(15, 10, 9999, 133 - OFFSET); // no line wrap
+		bonus.setSimpleColumn(15, -400, 345, (int) (133 - OFFSET - (startLine * 18.2))); // test
+		// wrap
+		// bonus.setSimpleColumn(15, 10, 345, 133 - OFFSET - (startLine * 19));
+
+		String bonusText = "";
+
+//		for (int i = 0; i <= startLine; i++) {
+//		    bonusText += "\n";
+//		}
+
+		bonusText += "例 ";
+		for (int i = 0; i <= numVacantLines - 1 && i < bonusWordsArrayList.size(); i++) {
+
+		    int lineNum = 7 - numVacantLines + i + 1;
+
+		    JSONObject thisWord = bonusWordsArrayList.get(i);
+
+		    bonusText += thisWord.getString("reading") + " : " + thisWord.getString("definition");
+		    bonusText += "\n";
+
+		}
+		bonus.setText(new Phrase(bonusText, kyokasho));
+		bonus.go(true); // TEST
+		// System.out.println(kanji + " 例 Lines Written (test):" +
+		// bonus.getLinesWritten());
+		if (bonus.getLinesWritten() + startLine > 7) {
+		    bonus = new ColumnText(writer.getDirectContent());
+		    bonus.setSimpleColumn(15, 10, 9999, (int) (133 - OFFSET - (startLine * 18.2))); // no line wrap
+		    // System.out.println("Adjusted");
+		} else {
+		    bonus = new ColumnText(writer.getDirectContent());
+		    bonus.setSimpleColumn(15, -400, 345, (int) (133 - OFFSET - (startLine * 18.2))); // line wrap (same as above but i have to do it
+												     // again)
+		}
+		bonus.setText(new Phrase(bonusText, kyokasho));
+		bonus.go();
+		// System.out.println(kanji + " 例 Lines Written (real):" +
+		// bonus.getLinesWritten());
+
+		writer.getDirectContent().rectangle(15, (int) (114.5 - OFFSET - (startLine * 18.2)), 16, 16); // bonus square
 
 	    }
 
@@ -147,6 +214,7 @@ public class FlashcardBack {
 	    writer.getDirectContent().setRGBColorFill(0xFF, 0xFF, 0xFF);
 	    writer.getDirectContent().setLineWidth(1);
 	    writer.getDirectContent().rectangle(220, 112.5 - OFFSET, 16, 16);
+
 	    writer.getDirectContent().fillStroke();
 	    writer.getDirectContent().restoreState();
 

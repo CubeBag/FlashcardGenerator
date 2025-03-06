@@ -16,7 +16,7 @@ import org.w3c.dom.Node;
 import org.xml.sax.SAXException;
 
 public class DictionaryIndexer {
-    JSONObject dictIndex;
+    Map<String, ArrayList<JSONObject>> dictIndex;
 
     public void init() throws XPathExpressionException, ParserConfigurationException, SAXException, IOException {
 	JSONObject kanjiIndexProto = KanjiIndexer.kanjiAsKeys();
@@ -75,7 +75,9 @@ public class DictionaryIndexer {
 		    worm.put("priority", prio);
 		    worm.put("definition", definitions.toString());
 
-		    (kanjiIndex.get(kanji)).add(worm);
+		    if (kanjis.length() > 0) { // change to 1 to test no singular kanji thing
+			(kanjiIndex.get(kanji)).add(worm);
+		    }
 
 		    System.out.println(worm);
 
@@ -90,9 +92,9 @@ public class DictionaryIndexer {
 	}
 
 	// System.out.println(kanjiIndex.getJSONArray("満"));
-	System.out.println(kanjiIndex.get("化"));
+	System.out.println(kanjiIndex.get("島"));
 
-	// this.dictIndex = kanjiIndex;
+	this.dictIndex = kanjiIndex;
     }
 
     public DictionaryIndexer() throws IOException, XPathExpressionException, ParserConfigurationException, SAXException {
@@ -103,6 +105,10 @@ public class DictionaryIndexer {
 	DictionaryIndexer a = new DictionaryIndexer();
 	a.init();
 
+    }
+
+    public ArrayList<JSONObject> getWordsForKanjiByFrequency(String kanji) {
+	return this.dictIndex.get(kanji);
     }
 
 }

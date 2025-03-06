@@ -39,7 +39,10 @@ public class FlashcardFront {
 	System.out.println("bottom margin = " + document.bottomMargin());
 	System.out.println("top margin = " + document.topMargin());
 
-	PdfWriter writer = PdfWriter.getInstance(document, new FileOutputStream("Kanji " + INDEX_START + " to " + INDEX_END + " Front.pdf"));
+	String fileName = "Kanji " + INDEX_START + " to " + INDEX_END + " Front.pdf";
+	fileName = fileName.replace(" ", ".");
+
+	PdfWriter writer = PdfWriter.getInstance(document, new FileOutputStream(fileName));
 
 	document.open();
 	Font font = FontFactory.getFont(FontFactory.COURIER, 16, BaseColor.BLACK);
